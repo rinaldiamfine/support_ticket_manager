@@ -1,0 +1,41 @@
+version: '3.6'
+
+volumes:
+  support_ticket_manager_psql:
+  support_ticket_manager_psql_test:
+  support_ticket_manager_redis:
+
+networks:
+  default:
+    name: 'support_ticket_manager_network'
+
+services:
+  db:
+    image: postgres:11-alpine
+    container_name: support_ticket_manager_psql
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_PASSWORD=${DB_PASS}
+    ports:
+      - ${DB_PORT}:5432
+    volumes:
+      - support_ticket_manager_psql:/var/lib/postgresql/data/
+
+  db_test:
+    image: postgres:11-alpine
+    container_name: support_ticket_manager_psql_test
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_PASSWORD=${DB_PASS}
+    ports:
+      - ${DB_TEST_PORT:-5433}:5432
+    volumes:
+      - support_ticket_manager_psql_test:/var/lib/postgresql/data/
+
+  redis:
+    image: redis:alpine3.10
+    container_name: support_ticket_manager_redis
+    ports:
+      - ${REDIS_PORT}:6379
