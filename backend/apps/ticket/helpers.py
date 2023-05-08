@@ -1,13 +1,77 @@
 from apps.ticket.models import (
     Tickets,
     TicketLines,
-    # TicketStatus,
-    # TicketCategories
+    TicketStatus,
+    TicketCategories
 )
+import os
+import pandas as pd
+
+
+class TicketCategoryHelpers:
+    def __init__(self) -> None:
+        self.base_path = os.getenv('BASE_PATH')
+
+    def seed_ticket_categories(self):
+        seeder_path = os.path.join(self.base_path, 'apps', 'seeders')
+        ticket_category_path = os.path.join(seeder_path, 'ticket_category.csv')
+        
+        data = pd.read_csv(ticket_category_path)
+        df = pd.DataFrame(data)
+        for row in df.itertuples():
+            ticket_ids = TicketCategories.base_query().filter(
+                TicketCategories.code == row.code
+            ).all()
+            if len(ticket_ids)>0:
+                print(f"- The ticket category with code:{row.code} is already exist on database!")
+                continue
+            
+            ticket_category_id = TicketCategories(
+                code=row.code,
+                name=row.name,
+                description=row.description,
+            )
+            ticket_category_id.save()
+
+        print("Finishing seed the ticket category process!\n")
+
+class TicketStatusHelpers:
+    def __init__(self) -> None:
+        self.base_path = os.getenv('BASE_PATH')
+
+    def seed_ticket_status(self):
+        seeder_path = os.path.join(self.base_path, 'apps', 'seeders')
+        ticket_status_path = os.path.join(seeder_path, 'ticket_status.csv')
+        
+        data = pd.read_csv(ticket_status_path)
+        df = pd.DataFrame(data)
+        for row in df.itertuples():
+            ticket_ids = TicketStatus.base_query().filter(
+                TicketStatus.code == row.code
+            ).all()
+            if len(ticket_ids)>0:
+                print(f"- The ticket status with code:{row.code} is already exist on database!")
+                continue
+            
+            ticket_status_id = TicketStatus(
+                code=row.code,
+                name=row.name,
+                description=row.description,
+            )
+            ticket_status_id.save()
+
+        print("Finishing seed the ticket status process!\n")
 
 class TicketHelpers:
-    def __init__(self):
-        pass
+    def __init__(
+        self,
+        api=None,
+        method=None,
+        user_id=None
+    ):
+        self.api = api
+        self.method = method
+        self.user_id = user_id
 
     def merge_tickets(self, datas: list):
         print("GOGOGO", datas)
@@ -16,7 +80,7 @@ class TicketHelpers:
         ticket_ids = Tickets.base_query().filter(
             
         ).all()
-        return ticket_ids
+        return True, ticket_ids
 
     def create(self, values: dict):
         ticket_id = Tickets(

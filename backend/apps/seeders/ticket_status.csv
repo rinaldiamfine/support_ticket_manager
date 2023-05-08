@@ -1,0 +1,8 @@
+code,name,description
+NEW,New,The ticket is new and waiting the system automatic assigned to support users.
+WAITING_FOR_SUPPORT,Waiting for Support,The ticket is waiting for a response from a support team member.
+WAITING_FOR_CUSTOMER,Waiting for Customer,The ticket requires additional information or input from the reporter. This may mean that the ticket is blocked until the additional information is provided.
+IN_PROGRESS,In Progress,The ticket has been assigned and is being investigated.
+CANCELED,Canceled,The ticket is no longer required and the reporter has selected “Cancel Request”. This status is solely for the reporter to use.
+RESOLVED,Resolved,The reported issue has been resolved and tested by the support team or your query has been answered in full.
+CLOSED,Closed,The ticket has been resolved or canceled and no further activity is expected.

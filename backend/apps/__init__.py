@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from celery import Celery
 from flask_caching import Cache
 from dotenv import load_dotenv
+from flask_marshmallow import Marshmallow
 from apps.blueprint_loaders import BlueprintLoaders
 
 app = Flask(__name__)
@@ -22,6 +23,7 @@ app.config['SQLALCHEMY_BINDS'] = SQLALCHEMY_BINDS
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
+ma = Marshmallow(app)
 
 cache = Cache(app, config={
     "CACHE_TYPE": "redis",

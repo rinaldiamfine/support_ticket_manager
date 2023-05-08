@@ -49,6 +49,7 @@ class BaseModel(db.Model):
         try:
             db.session.add(self)
             db.session.commit()
+            db.session.refresh(self)
             return self
 
         except Exception as e:

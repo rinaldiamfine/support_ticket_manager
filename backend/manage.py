@@ -35,6 +35,17 @@ def celery_status():
     return result
 
 @manager.command
+def seed_database():
+    from apps.ticket.helpers import (
+        TicketStatusHelpers,
+        TicketCategoryHelpers
+    )
+    print("Seeding the ticket status")
+    TicketStatusHelpers().seed_ticket_status()
+    print("Seeding the ticket category")
+    TicketCategoryHelpers().seed_ticket_categories()
+
+@manager.command
 def test():
     from apps.ticket.helpers import TicketHelpers
     from apps.openai.helpers import OpenAIHelpers
