@@ -5,7 +5,12 @@ from flask_apispec import MethodResource, marshal_with, use_kwargs
 from apps.ticket.helpers import (
     TicketHelpers
 )
+from apps.ticket.schemas import (
+    TicketSchema,
+    TicketListSchema
+)
 from flask import Response, request
+from marshmallow import fields
 import http.client
 import json
 import traceback
@@ -13,44 +18,45 @@ import requests
 
 api = Api(app)
 
-class TicketApi(Resource):
-    def __init__(self):
-        self.reqparser = reqparse.RequestParser()
-        self.reqparser.add_argument('user_id', type=int)
-        super(TicketApi, self).__init__()
+class TicketApi(MethodResource):
 
-    def get(self):
+    @use_kwargs({
+        "user_id": fields.Int(),
+        "name": fields.Str(),
+        "description": fields.Str(),
+        "status_id": fields.Int(),
+        "category_id": fields.Int(),
+    })
+    @marshal_with(TicketSchema)
+    def post(self, **kwargs):
         try:
-            filter_options = request.args.to_dict()
             param = dict()
-
-            if filter_options.get('offset'):
-                param['offset'] = filter_options.get('offset')
-
-            if filter_options.get('limit'):
-                param['limit'] = filter_options.get('limit')
-
-            if filter_options.get('keywords'):
-                param['keywords'] = filter_options.get('keywords')
-
             param['api'] = "/api/v1/tickets"
-            param['method'] = "GET"
-            status, result = TicketHelpers(**param).get(
-                 {}
-            )
-
-            if not status:
-                return Response(
-                    json.dumps(result),
-                    status=http.client.BAD_REQUEST,
-                    mimetype='application/json'
-                )
-
+            param['method'] = "POST"
+            result = TicketHelpers(**param).create(kwargs)
+            return result
+        
+        except Exception as e:
             return Response(
-                json.dumps(result),
-                status=http.client.OK,
+                json.dumps(str(e)),
+                status=http.client.INTERNAL_SERVER_ERROR,
                 mimetype='application/json'
             )
+
+    @use_kwargs({
+        "user_id": fields.Int(),
+        "offset": fields.Str(),
+        "limit": fields.Str(),
+        "keywords": fields.Str(),
+    }, locations=['query'])
+    @marshal_with(TicketListSchema)
+    def get(self, **kwargs):
+        try:
+            param = dict()
+            param['api'] = "/api/v1/tickets"
+            param['method'] = "GET"
+            result = TicketHelpers(**param).get(kwargs)
+            return result
 
         except Exception as e:
             return Response(

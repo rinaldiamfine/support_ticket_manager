@@ -8,6 +8,16 @@ from apps.ticket.models import (
     TicketCategories
 )
 
-class UnlimitedApprovalSchema(ma.ModelSchema):
+class TicketSchema(ma.ModelSchema):
+    class Meta:
+        model = Tickets
+
+class TicketListSchema(Schema):
+    ticket = fields.Nested(TicketSchema, many=True)
+    limit = fields.Int(allow_none=True)
+    offset = fields.Int(allow_none=True)
+    keywords = fields.Str(allow_none=True)
+    total = fields.Int()
+
     class Meta:
         model = Tickets

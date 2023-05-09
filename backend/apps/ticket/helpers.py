@@ -4,6 +4,10 @@ from apps.ticket.models import (
     TicketStatus,
     TicketCategories
 )
+from apps.ticket.schemas import (
+    TicketSchema,
+    TicketListSchema
+)
 import os
 import pandas as pd
 
@@ -80,7 +84,17 @@ class TicketHelpers:
         ticket_ids = Tickets.base_query().filter(
             
         ).all()
-        return True, ticket_ids
+        result_dump = TicketSchema(many=True).dump(ticket_ids)
+        result = TicketListSchema().load(
+            {
+                "ticket": result_dump,
+                "limit": values.get('limit'),
+                "offset": values.get('offset'),
+                "keywords": values['keywords'] if values.get('keywords') else '',
+                "total": len(ticket_ids)
+            }
+        )
+        return result
 
     def create(self, values: dict):
         ticket_id = Tickets(
@@ -91,7 +105,7 @@ class TicketHelpers:
             category_id=values.get('category_id'),
         )
         ticket_id.save()
-        return True, ticket_id
+        return ticket_id
     
     def delete(self, ticket: int):
         ticket_id = Tickets.base_query().filter_by(
