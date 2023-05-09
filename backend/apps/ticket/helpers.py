@@ -80,7 +80,7 @@ class TicketHelpers:
     def merge_tickets(self, datas: list):
         print("GOGOGO", datas)
 
-    def get(self, values: dict):
+    def list(self, values: dict):
         ticket_ids = Tickets.base_query().filter(
             
         ).all()
@@ -107,9 +107,10 @@ class TicketHelpers:
         ticket_id.save()
         return ticket_id
     
-    def delete(self, ticket: int):
+    def delete(self, id: int, user_id: int):
         ticket_id = Tickets.base_query().filter_by(
-            id=ticket
+            id=id,
+            user_id=user_id,
         ).first()
         if not ticket_id:
             return False, "Ticket not found"
@@ -118,9 +119,11 @@ class TicketHelpers:
     
     def update(self, values: dict):
         ticket_id = Tickets.base_query().filter(
-            Tickets.id == values.get('id')
+            Tickets.id == values.get('id'),
+            Tickets.user_id == values.get('user_id')
         ).first()
         if not ticket_id:
             return False, "Ticket not found"
-        ticket_id.update(values)
-        return True, ticket_id
+        print(values)
+        ticket_id.update(**values)
+        return ticket_id

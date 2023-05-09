@@ -55,7 +55,7 @@ class TicketApi(MethodResource):
             param = dict()
             param['api'] = "/api/v1/tickets"
             param['method'] = "GET"
-            result = TicketHelpers(**param).get(kwargs)
+            result = TicketHelpers(**param).list(kwargs)
             return result
 
         except Exception as e:
@@ -64,3 +64,19 @@ class TicketApi(MethodResource):
                 status=http.client.INTERNAL_SERVER_ERROR,
                 mimetype='application/json'
             )
+        
+    @use_kwargs({
+        "id": fields.Int(),
+        "user_id": fields.Int(),
+        "name": fields.Str(),
+        "description": fields.Str(),
+        "status_id": fields.Int(),
+        "category_id": fields.Int(),
+    })
+    @marshal_with(TicketSchema)
+    def put(self, **kwargs):
+        param = dict()
+        param['api'] = "/api/v1/tickets"
+        param['method'] = "PUT"
+        result = TicketHelpers(**param).update(kwargs)
+        return result
