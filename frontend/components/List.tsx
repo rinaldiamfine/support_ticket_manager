@@ -1,4 +1,5 @@
 import React from "react"
+import { Badge } from "./Badge"
 
 export type ListModel = {
     id: string,
@@ -6,8 +7,10 @@ export type ListModel = {
     name: string,
     email: string,
     imageURL: any,
-    status_id: string,
-    status_name: string
+    type_id: string,
+    type: string,
+    status_id:string,
+    status: string
 }
 
 export function List(datas: ListModel[], isUseImage: boolean) {
@@ -25,9 +28,14 @@ export function List(datas: ListModel[], isUseImage: boolean) {
                             <p className="mt-1 truncate text-xs leading-5 text-gray-500">{data.email}</p>
                         </div>
                     </div>
-                    <div className="flex gap-x-4">
+                    <div className="flex items-center justify-between gap-x-4">
                         <div className="min-w-0 flex-auto">
-                            <p className="text-sm font-semibold leading-6 text-gray-900">{data.subject}</p>
+                            <p className="mt-1 truncate text-xs leading-5 text-gray-500">{data.subject}</p>
+                        </div>
+                    </div>
+                    <div className="flex items-center justify-between gap-x-4">
+                        <div className="min-w-0 flex-auto">
+                            { Badge(data.status, "ring-red-600/10")}
                         </div>
                     </div>
 
