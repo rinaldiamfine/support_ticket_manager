@@ -1,6 +1,5 @@
 import React from 'react'
-// import 'regenerator-runtime/runtime';
-import { useTable } from 'react-table'
+import { Column, useTable } from 'react-table'
 import { classNames } from './Utils'
 
 // Define a default UI for filtering
@@ -104,7 +103,7 @@ export function AvatarCell(value: string, column: any, row: any) {
     )
 }
 
-function Table({ columns, data }) {
+function Table({ columns , data }) {
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({
       columns,
@@ -112,51 +111,45 @@ function Table({ columns, data }) {
     });
 
     return (
-        <table { ...getTableProps() } style={ { border: 'solid 1px blue' } }>
+        <table {...getTableProps()}>
             <thead>
-                { headerGroups.map(headerGroup => (
-                    <tr { ...headerGroup.getHeaderGroupProps() }>
-                        { headerGroup.headers.map(column => (
-                            <th key={column.id}
-                                { ...column.getHeaderProps() }
-                                style={ {
-                                borderBottom: 'solid 3px red',
-                                background: 'aliceblue',
-                                color: 'black',
-                                fontWeight: 'bold',
-                                } }
-                            >
-                                { column.render('Header') }
-                            </th>
-                        )) }
+                { headerGroups.map((headerGroup: { getHeaderGroupProps: () => { [x: string]: any; key: any; }; headers: any[]; }) => {
+                const { key, ...restHeaderGroupProps } =
+                    headerGroup.getHeaderGroupProps();
+                return (
+                    <tr key={key} {...restHeaderGroupProps}>
+                    {headerGroup.headers.map((column) => {
+                        const { key, ...restColumn } = column.getHeaderProps();
+                        return (
+                        <th key={key} {...restColumn}>
+                            {column.render("Header")}
+                        </th>
+                        );
+                    })}
                     </tr>
-                )) }
+                );
+                }) }
             </thead>
-          <tbody {...getTableBodyProps()}>
-          {rows.map(row => {
-           prepareRow(row)
-           return (
-             <tr {...row.getRowProps()}>
-               {row.cells.map(cell => {
-                 return (
-                   <td key={row.id}
-                     {...cell.getCellProps()}
-                     style={{
-                       padding: '10px',
-                       border: 'solid 1px gray',
-                       background: 'papayawhip',
-                     }}
-                   >
-                     {cell.render('Cell')}
-                   </td>
-                 )
-               })}
-             </tr>
-           )
-         })}
-          </tbody>
+            <tbody {...getTableBodyProps}>
+                { rows.map((row: { getRowProps: () => { [x: string]: any; key: any; }; cells: any[]; }) => {
+                prepareRow(row);
+                const { key, ...restRowProps } = row.getRowProps();
+                return (
+                    <tr key={key} {...restRowProps}>
+                    {row.cells.map((cell) => {
+                        const { key, ...restCellProps } = cell.getCellProps();
+                        return (
+                        <td key={key} {...restCellProps}>
+                            {cell.render("Cell")}
+                        </td>
+                        );
+                    })}
+                    </tr>
+                );
+                }) }
+            </tbody>
         </table>
-    );
+      );
   }
   
   export default Table;
