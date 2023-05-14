@@ -1,6 +1,7 @@
 import React from 'react'
 import { Column, useTable } from 'react-table'
 import { classNames } from './Utils'
+import '../app/globals.css'
 
 // Define a default UI for filtering
 // function GlobalFilter(
@@ -72,7 +73,6 @@ import { classNames } from './Utils'
   
 export function StatusPill(value: string) {
     const status = value ? value.toLowerCase() : "unknown";
-  
     return (
       <span
         className={
@@ -111,8 +111,8 @@ function Table({ columns , data }) {
     });
 
     return (
-        <table {...getTableProps()}>
-            <thead>
+        <table {...getTableProps()} className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
                 { headerGroups.map((headerGroup: { getHeaderGroupProps: () => { [x: string]: any; key: any; }; headers: any[]; }) => {
                 const { key, ...restHeaderGroupProps } =
                     headerGroup.getHeaderGroupProps();
@@ -121,7 +121,7 @@ function Table({ columns , data }) {
                     {headerGroup.headers.map((column) => {
                         const { key, ...restColumn } = column.getHeaderProps();
                         return (
-                        <th key={key} {...restColumn}>
+                        <th key={key} {...restColumn} scope="col" className="group px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             {column.render("Header")}
                         </th>
                         );
@@ -130,7 +130,7 @@ function Table({ columns , data }) {
                 );
                 }) }
             </thead>
-            <tbody {...getTableBodyProps}>
+            <tbody {...getTableBodyProps} className="bg-white divide-y divide-gray-200">
                 { rows.map((row: { getRowProps: () => { [x: string]: any; key: any; }; cells: any[]; }) => {
                 prepareRow(row);
                 const { key, ...restRowProps } = row.getRowProps();
@@ -139,7 +139,7 @@ function Table({ columns , data }) {
                     {row.cells.map((cell) => {
                         const { key, ...restCellProps } = cell.getCellProps();
                         return (
-                        <td key={key} {...restCellProps}>
+                        <td key={key} {...restCellProps} role="cell" className="px-6 py-4 whitespace-nowrap">
                             {cell.render("Cell")}
                         </td>
                         );
@@ -149,7 +149,7 @@ function Table({ columns , data }) {
                 }) }
             </tbody>
         </table>
-      );
-  }
+    );
+}
   
-  export default Table;
+export default Table;
