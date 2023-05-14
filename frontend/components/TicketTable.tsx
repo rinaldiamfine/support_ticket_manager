@@ -1,5 +1,5 @@
 import React from 'react'
-import { Column, useTable } from 'react-table'
+import { Column, useRowSelect, useTable } from 'react-table'
 import { classNames } from './Utils'
 import '../app/globals.css'
 
@@ -89,67 +89,70 @@ export function StatusPill(value: string) {
     );
 };
   
-export function AvatarCell(value: string, column: any, row: any) {
+export function AvatarCell({ value, column, row }) {
     return (
       <div className="flex items-center">
         <div className="flex-shrink-0 h-10 w-10">
-          {/* <img className="h-10 w-10 rounded-full" src={row.original[column.imgAccessor]} alt="" /> */}
+          <img className="h-10 w-10 rounded-full" src={row.original[column.imgAccessor]} alt="" />
         </div>
         <div className="ml-4">
           <div className="text-sm font-medium text-gray-900">{value}</div>
-          {/* <div className="text-sm text-gray-500">{row.original[column.emailAccessor]}</div> */}
+          <div className="text-sm text-gray-500">{row.original[column.emailAccessor]}</div>
         </div>
       </div>
     )
 }
 
-function Table({ columns , data }) {
+function TicketTable({ columns , data }) {
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({
       columns,
       data,
-    });
+    }, useRowSelect );
 
     return (
         <table {...getTableProps()} className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
                 { headerGroups.map((headerGroup: { getHeaderGroupProps: () => { [x: string]: any; key: any; }; headers: any[]; }) => {
-                const { key, ...restHeaderGroupProps } =
-                    headerGroup.getHeaderGroupProps();
-                return (
+                const { key, ...restHeaderGroupProps } = headerGroup.getHeaderGroupProps();
+                  return (
                     <tr key={key} {...restHeaderGroupProps}>
-                    {headerGroup.headers.map((column) => {
-                        const { key, ...restColumn } = column.getHeaderProps();
-                        return (
-                        <th key={key} {...restColumn} scope="col" className="group px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            {column.render("Header")}
-                        </th>
-                        );
-                    })}
+                      {headerGroup.headers.map((column) => {
+                          const { key, ...restColumn } = column.getHeaderProps();
+                          return (
+                          <th key={key} {...restColumn} scope="col" className="group px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                              {column.render("Header")}
+                          </th>
+                          );
+                      })}
                     </tr>
-                );
+                  );
                 }) }
             </thead>
-            <tbody {...getTableBodyProps} className="bg-white divide-y divide-gray-200">
+            <tbody { ...getTableBodyProps() } className="bg-white divide-y divide-gray-200">
                 { rows.map((row: { getRowProps: () => { [x: string]: any; key: any; }; cells: any[]; }) => {
-                prepareRow(row);
-                const { key, ...restRowProps } = row.getRowProps();
-                return (
-                    <tr key={key} {...restRowProps}>
-                    {row.cells.map((cell) => {
-                        const { key, ...restCellProps } = cell.getCellProps();
-                        return (
-                        <td key={key} {...restCellProps} role="cell" className="px-6 py-4 whitespace-nowrap">
-                            {cell.render("Cell")}
-                        </td>
-                        );
-                    })}
-                    </tr>
-                );
+                  prepareRow(row);
+                  const { key, ...restRowProps } = row.getRowProps();
+                  return (
+                      <tr key={key} {...restRowProps}>
+                        { row.cells.map((cell) => {
+                            const { key, ...restCellProps } = cell.getCellProps();
+                            return (
+                              <td key={key} {...restCellProps} role="cell" className="px-6 py-4 whitespace-nowrap">
+                                  {/* {cell.render("Cell")} */}
+                                  { cell.column.Cell.name === "defaultRenderer"
+                                    ? <div className="text-sm text-gray-500">{cell.render('Cell')}</div>
+                                    : cell.render('Cell')
+                                  }
+                              </td>
+                            );
+                        }) }
+                      </tr>
+                  );
                 }) }
             </tbody>
         </table>
     );
 }
   
-export default Table;
+export default TicketTable;

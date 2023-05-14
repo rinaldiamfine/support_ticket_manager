@@ -1,7 +1,7 @@
 import React from 'react'
 import { InternalLayout } from '@/components/Layout'
 import { List, ListModel } from '@/components/List'
-import Table, { AvatarCell, StatusPill } from '@/components/Table'
+import TicketTable, { AvatarCell, StatusPill } from '@/components/TicketTable'
 import './style.css'
 
 const people: ListModel[] = [
@@ -109,6 +109,9 @@ export default function Dashboard() {
     {
       Header: "Name",
       accessor: "name",
+      imgAccessor: "imgUrl",
+      emailAccessor: "email",
+      Cell: AvatarCell
     },
     {
       Header: "Title",
@@ -134,7 +137,7 @@ export default function Dashboard() {
             <h1 className="text-xl font-semibold">Tickets</h1>
         </div>
         <div className="mt-6">
-          <Table columns={columns} data={data} />
+          <TicketTable columns={columns} data={data} />
         </div>
       </main>
     </div>
