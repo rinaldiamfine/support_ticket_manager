@@ -71,7 +71,7 @@ import '../app/globals.css'
 //     )
 // }
   
-export function StatusPill(value: string) {
+export function StatusPill({ value }) {
     const status = value ? value.toLowerCase() : "unknown";
     return (
       <span

@@ -3,7 +3,6 @@ import { InternalLayout } from '@/components/Layout'
 import { List, ListModel } from '@/components/List'
 import TicketTable, { AvatarCell, StatusPill } from '@/components/TicketTable'
 import './style.css'
-import RequestAPI from '@/helpers/fetch'
 
 const people: ListModel[] = [
   {
@@ -121,6 +120,7 @@ export default function Dashboard() {
     {
       Header: "Status",
       accessor: "status",
+      Cell: StatusPill
     },
     {
       Header: "Role",
@@ -147,27 +147,27 @@ export default function Dashboard() {
 
 
   return (
-    <div>
-      { tickets.length > 0 && (
-        <ul>
-          {tickets.map(user => (
-            <li key={user.title}>{user.body}</li>
-          ))}
-        </ul>
-      ) }
-    </div>
+    // <div>
+    //   { tickets.length > 0 && (
+    //     <ul>
+    //       {tickets.map(user => (
+    //         <li key={user.title}>{user.body}</li>
+    //       ))}
+    //     </ul>
+    //   ) }
+    // </div>
 
-    // <InternalLayout>
-    //   <div className="min-h-screen bg-gray-100 text-gray-900 pt-4">
-    //     <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
-    //       <div className="">
-    //           <h1 className="text-xl font-semibold">Tickets</h1>
-    //       </div>
-    //       <div className="mt-6">
-    //         <TicketTable columns={columns} data={data} />
-    //       </div>
-    //     </main>
-    //   </div>
-    // </InternalLayout>
+    <InternalLayout>
+      <div className="min-h-screen bg-gray-100 text-gray-900 pt-4 pb-4">
+        <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-4">
+          <div className="">
+              <h1 className="text-xl font-semibold">Tickets</h1>
+          </div>
+          <div className="mt-6">
+            <TicketTable columns={columns} data={data} />
+          </div>
+        </main>
+      </div>
+    </InternalLayout>
   )
 }
